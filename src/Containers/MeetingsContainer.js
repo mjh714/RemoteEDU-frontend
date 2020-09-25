@@ -1,5 +1,5 @@
 import React from 'react';
-import Table from '@material-ui/core/Table';
+// import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -11,27 +11,22 @@ import Meeting from '../Components/Meeting.js'
 
 class MeetingsContainer extends React.Component {
 
-    state = {
-        meetings: []
-    }
+    // state = {
+    //     meetings: []
+    // }
 
-    componentDidMount() {
-        fetch("http://localhost:3000/meetings")
-        .then(resp => resp.json())
-        .then(meetingData => this.setState({
-            meetings: meetingData
-        }))
-    }
+    // componentDidMount() {
+    //     fetch("http://localhost:3000/meetings")
+    //     .then(resp => resp.json())
+    //     .then(meetingData => this.setState({
+    //         meetings: meetingData
+    //     }))
+    // }
 
     getMeetings = () => {
-        let filteredArr = this.state.meetings.filter(meeting => meeting.course_id === this.props.courseID)
+        console.log(this.props.meetings)
+        let filteredArr = this.props.meetings.filter(meeting => meeting.course_id === this.props.courseID)
         return filteredArr.map(meeting => <Meeting key={meeting.id} meeting={meeting} courseTitle={this.props.courseTitle}/>)
-        // if(filteredArr.length > 0){
-        // } else {
-        //     return this.state.meetings.map(meeting => <Meeting key={meeting.id} meeting={meeting}/>)
-        // }
-
-        // console.log(filteredArr)
     }
 
     useRowStyles = () => {
