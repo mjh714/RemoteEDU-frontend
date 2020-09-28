@@ -1,12 +1,8 @@
 import React from 'react';
-// import Table from '@material-ui/core/Table';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
 class Meeting extends React.Component {
-    // state = {
-    //     courses: []
-    // }
 
     render() {
         return (
