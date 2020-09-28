@@ -7,19 +7,23 @@ import Course from '../Components/Course'
 import MeetingsContainer from './MeetingsContainer'
 import PastMeetingsContainer from './PastMeetingsContainer'
 import moment from 'moment'
+import StudentListContainer from './StudentListContainer'
+import CreateCourse from '../Components/CreateCourse'
+import CreateMeeting from '../Components/CreateMeeting'
 
 
-
-class StudentCoursesContainer extends React.Component {
-
-  //! rename this to UserCoursesContainer to be rusable and dynamic for either teachers or students
+class UsersCoursesContainer extends React.Component {
 
   state = {
     selectedCourseId: 0,
     selectedCourseTitle: "",
     currentMeetings: [],
     previousMeetings: [],
-    allMeetings: []
+    allMeetings: [],
+    teachers: [],
+    students: [],
+    selectedCourseStudents: [],
+    selectedCourseTeachers: []
   }
 
     useStyles = () => {
@@ -41,6 +45,23 @@ class StudentCoursesContainer extends React.Component {
   }
 
   componentDidMount() {
+    fetch("http://localhost:3000/users")
+    .then(response => response.json())
+    .then(data => {
+      let studentsArr = []
+      let teachersArr = []
+      for (const user of data) {
+        if(!user.is_teacher){
+          studentsArr.push(user)
+        } else {
+          teachersArr.push(user)
+        }
+      }
+      this.setState({
+        students: studentsArr,
+        teachers: teachersArr
+      })
+    })
     fetch("http://localhost:3000/meetings")
     .then(resp => resp.json())
     .then(meetingData => {
@@ -52,10 +73,7 @@ class StudentCoursesContainer extends React.Component {
       this.setState({
         currentMeetings: this.state.allMeetings.filter(meeting => moment(meeting.date).isAfter(todayDate)),
         previousMeetings: this.state.allMeetings.filter(meeting => moment(todayDate).isAfter(meeting.date))
-      })
-    }
-      
-    )
+      })})
   }
 
   changeHandler = (event) => {
@@ -67,10 +85,51 @@ class StudentCoursesContainer extends React.Component {
     this.setState({
       selectedCourseId: parseInt(event.target.dataset.id)
     })
+
+    fetch("http://localhost:3000/courses/" + parseInt(event.target.dataset.id))
+    .then(res => res.json())
+    .then(data => {
+      let studentsArr = []
+      let teachersArr = []
+      let newArr = data.users
+      for (const user of newArr) {
+        if(!user.is_teacher){
+          studentsArr.push(user)
+        } else {
+          teachersArr.push(user)
+        }
+      }
+      this.setState({
+        selectedCourseStudents: studentsArr,
+        selectedCourseTeachers: teachersArr
+      })
+    })
   }
 
 //*   moment('2010-10-20').isAfter('2010-01-01', 'year'); // false
 //* moment('2010-10-20').isAfter('2009-12-31', 'year'); // true
+
+  
+  
+  createMeetingHandler = (meetingObj) => {
+    let newArr = [...this.state.allMeetings, meetingObj]
+    this.setState({ allMeetings: newArr})
+    
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify(meetingObj)
+    }
+    fetch("http://localhost:3000/meetings", options)
+    .then(res => res.json())
+    .then(data => {
+      console.log(data)
+      window.location.reload(false);
+    })
+  }
 
   render(){
       return (
@@ -86,12 +145,27 @@ class StudentCoursesContainer extends React.Component {
           </FormControl>
           <br />
           <br />
+          {/* TEACHERS */}
+          <h5>TEACHERS</h5>
+          <CreateCourse courseHandler={this.props.courseHandler} />
+          <CreateMeeting meetingHandler={this.createMeetingHandler} courses={this.props.courses}/>
+          <h5>STUDENTS</h5>
+          {/* STUDENTS
+            ENROLL IN COURSE
+          */}
+          <br />
+          <br />
+          <StudentListContainer students={this.state.selectedCourseStudents}/>
+          <br />
+          <br />
           <MeetingsContainer meetings={this.state.currentMeetings} courseTitle={this.state.selectedCourseTitle} courseID={this.state.selectedCourseId} />
           <PastMeetingsContainer meetings={this.state.previousMeetings} courseTitle={this.state.selectedCourseTitle} courseID={this.state.selectedCourseId} />
+          <br />
+          <br />
         </React.Fragment>
       );
   }
 
 }
 
-export default StudentCoursesContainer
+export default UsersCoursesContainer

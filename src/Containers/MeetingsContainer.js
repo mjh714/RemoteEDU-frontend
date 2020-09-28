@@ -33,7 +33,7 @@ class MeetingsContainer extends React.Component { //* Current Meetings Container
         return (
         <React.Fragment>
             <h4>Future Meetings</h4>
-        <TableContainer style={{"width": "50%"}} component={Paper}>
+            <TableContainer style={{"width": "50%"}} component={Paper}>
             <TableHead style={{"backgroundColor": "white"}}>
                 <TableRow>
                     <TableCell align="left">Date</TableCell>
@@ -42,9 +42,9 @@ class MeetingsContainer extends React.Component { //* Current Meetings Container
                     <TableCell align="left">Course</TableCell>
                 </TableRow>
             </TableHead>
-            <TableBody>
-                    {this.getMeetings()} 
-            </TableBody>
+        <TableBody>
+            {this.getMeetings()} 
+        </TableBody>
         </TableContainer>
         </React.Fragment>
         )
