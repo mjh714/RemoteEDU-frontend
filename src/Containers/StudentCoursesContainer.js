@@ -1,8 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
-// import MenuItem from '@material-ui/core/MenuItem';
-// import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Course from '../Components/Course'
@@ -13,6 +11,8 @@ import moment from 'moment'
 
 
 class StudentCoursesContainer extends React.Component {
+
+  //! rename this to UserCoursesContainer to be rusable and dynamic for either teachers or students
 
   state = {
     selectedCourseId: 0,
@@ -58,14 +58,9 @@ class StudentCoursesContainer extends React.Component {
     )
   }
 
-  // getMeetings = () => {
-  //   let filteredArr = this.state.allMeetings.filter(meeting => meeting.course_id === this.props.courseID)
-  //   return filteredArr.map(meeting => <Meeting key={meeting.id} meeting={meeting} courseTitle={this.props.courseTitle}/>)
-  // }
-
   changeHandler = (event) => {
-    // console.log(event.target.dataset.id)
-    // debugger
+    //? If event.target.value === 'Courses' => show all meetings 
+
     this.setState({
       selectedCourseTitle: event.target.dataset.title
     })
@@ -77,25 +72,7 @@ class StudentCoursesContainer extends React.Component {
 //*   moment('2010-10-20').isAfter('2010-01-01', 'year'); // false
 //* moment('2010-10-20').isAfter('2009-12-31', 'year'); // true
 
-  // pastMeetingHandler = () => {
-  //   let todayDate = moment().format('YYYY-MM-DD')
-  //   let past = this.state.allMeetings.filter(meeting => moment(todayDate).isAfter(meeting.date))
-  //     this.setState({
-  //       previousMeetings: past
-  //     })
-  // }
-
-  // currentMeetingHandler = () => {
-  //   let todayDate = moment().format('YYYY-MM-DD')
-  //   let current = this.state.allMeetings.filter(meeting => moment(meeting.date).isAfter(todayDate))
-  //     this.setState({
-  //       currentMeetings: current
-  //     })
-  // }
-
   render(){
-    console.log(this.state.currentMeetings)
-    // console.log(this.state.previousMeetings)
       return (
         <React.Fragment>
           <FormControl style={{"width": "50%"}} className={this.classes()}>

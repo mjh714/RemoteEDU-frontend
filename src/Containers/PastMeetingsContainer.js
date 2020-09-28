@@ -9,20 +9,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Meeting from '../Components/Meeting.js'
 
 class PastMeetingsContainer extends React.Component {
-    // state = {
-    //     meetings: []
-    // }
-
-    // componentDidMount() {
-    //     fetch("http://localhost:3000/meetings")
-    //     .then(resp => resp.json())
-    //     .then(meetingData => this.setState({
-    //         meetings: meetingData
-    //     }))
-    // }
 
     getMeetings = () => {
-        // console.log(this.props.meetings)
         let filteredArr = this.props.meetings.filter(meeting => meeting.course_id === this.props.courseID)
         return filteredArr.map(meeting => <Meeting key={meeting.id} meeting={meeting} courseTitle={this.props.courseTitle}/>)
     }
@@ -39,7 +27,7 @@ class PastMeetingsContainer extends React.Component {
     render() { 
         return (
         <React.Fragment>
-            <h1>Past Meetings</h1>
+            <h4>Past Meetings</h4>
         <TableContainer style={{"width": "50%"}} component={Paper}>
             <TableHead style={{"backgroundColor": "white"}}>
                 <TableRow>
