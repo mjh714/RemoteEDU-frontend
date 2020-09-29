@@ -7,7 +7,7 @@ class LoginContainer extends React.Component {
         return(
             <React.Fragment>
                 <h1>Login</h1>
-                <Login />
+                <Login loginHandler={this.props.loginHandler} />
             </React.Fragment>
         )
     }

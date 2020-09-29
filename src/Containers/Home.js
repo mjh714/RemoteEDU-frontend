@@ -19,11 +19,11 @@ class Home extends React.Component {
     render(){
         return(
             <div>
-                <h1>Welcome</h1>
+                {this.props.user ? <h1>Welcome, {this.props.user.full_name}</h1> : <h1>Welcome</h1>}
             <div className="quote-block" style={{"textAlign": "center"}}  >
                     <blockquote>"{this.state.quote["text"]}"</blockquote>
                 <p>
-                   By: {this.state.quote["author"] ? this.state.quote["author"] : "Unknown"}
+                    By: {this.state.quote["author"] ? this.state.quote["author"] : "Unknown"}
                 </p>
             </div>
             </div>
