@@ -7,6 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import Button from '@material-ui/core/Button';
 
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -30,11 +31,15 @@ export default function MenuAppBar() {
             <Toolbar>
                 <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
                 </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            RemoteEDU
-          </Typography>
-            <Button color="inherit">Login</Button>
-            <Button color="inherit">Signup</Button>
+              <Typography variant="h6" className={classes.title}>
+                  <Button href="/" color="inherit" >
+                    <h3>
+                    RemoteEDU
+                    </h3>
+                  </Button>
+              </Typography>
+              <Button href="/login" color="inherit">Login</Button>
+            <Button href="/signup" color="inherit">Signup</Button>
             <div>
               <Menu
                 id="menu-appbar"
