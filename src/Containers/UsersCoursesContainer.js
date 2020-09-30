@@ -11,7 +11,6 @@ import StudentListContainer from './StudentListContainer'
 import CreateCourse from '../Components/CreateCourse'
 import CreateMeeting from '../Components/CreateMeeting'
 
-
 class UsersCoursesContainer extends React.Component {
 
   state = {
