@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import Button from '@material-ui/core/Button';
-
+import { NavLink } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,7 +20,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MenuAppBar() {
+const logout = (e) => {
+  localStorage.removeItem("token")
+  window.location.reload(false)
+}
+
+export default function NavBar(props) {
   const classes = useStyles();
   const [anchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -37,9 +42,10 @@ export default function MenuAppBar() {
                     RemoteEDU
                     </h3>
                   </Button>
+              {props.user ? <NavLink to="/users/courses" style={{"color": "white"}} >Dashboard</NavLink> : null}
               </Typography>
-              <Button href="/login" color="inherit">Login</Button>
-            <Button href="/signup" color="inherit">Signup</Button>
+              {props.user ? <Button onClick={logout} color="inherit">Logout</Button> : <Button href="/login" color="inherit">Login</Button>}
+              {props.user ? null : <Button href="/signup" color="inherit">Signup</Button>}
             <div>
               <Menu
                 id="menu-appbar"

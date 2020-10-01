@@ -1,17 +1,33 @@
 import React from 'react';
 import './App.css';
-import { Switch, Route} from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import Home from './Containers/Home.js'
-import MenuAppBar from './Components/NavBar.js'
-import StudentCourses from './Containers/UserCourses.js'
+import NavBar from './Components/NavBar.js'
+import UserCourses from './Containers/UserCourses.js'
 import LoginContainer from './Containers/LoginContainer'
 import SignupContainer from './Containers/SignupContainer'
 
 class App extends React.Component {
 
   state = {
-    user: {}
+    user: null
   }
+
+  componentDidMount = () => {
+    const token = localStorage.getItem("token")
+    if(token){
+      fetch("http://localhost:3000/profile", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`},
+        })
+      .then(resp => resp.json())
+      .then(data => this.setState({ user: data.user }))
+    } else {
+      this.props.history.push('/users/courses')
+    }
+  };
+  
 
   signupHandler = (newUser) => {
     const options = {
@@ -28,7 +44,6 @@ class App extends React.Component {
   }
 
   loginHandler = (user) => {
-    // console.log(user)
     const options = {
       method: 'POST',
       headers: {
@@ -40,20 +55,21 @@ class App extends React.Component {
     fetch("http://localhost:3000/login", options)
     .then(res => res.json())
     .then(data => {
-      console.log(data)
-      // this.setState({
-      //   user: data
-      // }, console.log(this.state.user))
+      localStorage.setItem("token", data.jwt)
+      this.setState({
+        user: data.user
+      }, () => this.props.history.push("/"))
     })
   }
 
   render(){
+    console.log(this.state.user)
     return (
       <div className="App">
-        <MenuAppBar />
+        <NavBar user={this.state.user} />
         <Switch>
-          <Route path="/users/courses" component={StudentCourses}/>
-          <Route path="/login" component={()=> <LoginContainer loginHandler={this.loginHandler} />}/> 
+          <Route path="/users/courses" component={() => <UserCourses user={this.state.user} />}/>
+          <Route path="/login" component={()=> <LoginContainer user={this.state.user} loginHandler={this.loginHandler} />}/> 
           <Route path="/signup" component={()=> <SignupContainer signupHandler={this.signupHandler} />}/>
           <Route path="/" component={()=> <Home loggedUser={this.state.user}/> }/>
         </Switch>
@@ -62,4 +78,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default withRouter(App);

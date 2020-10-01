@@ -10,6 +10,8 @@ import moment from 'moment'
 import StudentListContainer from './StudentListContainer'
 import CreateCourse from '../Components/CreateCourse'
 import CreateMeeting from '../Components/CreateMeeting'
+import Enroll from "../Components/Enroll"
+import DropCourse from '../Components/DropCourse'
 
 class UsersCoursesContainer extends React.Component {
 
@@ -22,7 +24,9 @@ class UsersCoursesContainer extends React.Component {
     teachers: [],
     students: [],
     selectedCourseStudents: [],
-    selectedCourseTeachers: []
+    selectedCourseTeachers: [],
+    allCourses: [],
+    myCourses: []
   }
 
     useStyles = () => {
@@ -40,10 +44,25 @@ class UsersCoursesContainer extends React.Component {
   classes = () => this.useStyles();
   
   getCourses = () => {
-      return this.props.courses.map(course => <Course changeHandler={this.changeHandler} key={course.id} course={course} />)
+      return this.props.user.courses.map(course => <Course changeHandler={this.changeHandler} key={course.id} course={course} />)
   }
 
   componentDidMount() {
+    fetch("http://localhost:3000/courses")
+    .then(res => res.json())
+    .then(data => {
+      let newArr = [...this.props.user.courses]
+      const key = 'id'
+      let filteredArr = [...new Map(newArr.map(item =>
+        [item[key], item])).values()];
+      
+      console.log(filteredArr)
+      this.setState({
+        allCourses: data,
+        myCourses: [...new Map(this.props.user.courses.map(item =>
+          [item[key], item])).values()]
+      })
+    })
     fetch("http://localhost:3000/users")
     .then(response => response.json())
     .then(data => {
@@ -61,30 +80,29 @@ class UsersCoursesContainer extends React.Component {
         teachers: teachersArr
       })
     })
-    fetch("http://localhost:3000/meetings")
-    .then(resp => resp.json())
-    .then(meetingData => {
-      let todayDate = moment().format('YYYY-MM-DD')
-
-      this.setState({
-        allMeetings: meetingData,
+    let todayDate = moment().format('YYYY-MM-DD')
+    
+    let courses = this.props.user.courses
+    for (const course of courses) {
+      fetch("http://localhost:3000/courses/" + course.id)
+      .then(resp => resp.json())
+      .then(course => {
+        this.setState({ allMeetings: course.meetings})
+        this.setState({
+          currentMeetings: this.state.allMeetings.filter(meeting => moment(meeting.date).isAfter(todayDate)),
+          previousMeetings: this.state.allMeetings.filter(meeting => moment(todayDate).isAfter(meeting.date))
+        })
       })
-      this.setState({
-        currentMeetings: this.state.allMeetings.filter(meeting => moment(meeting.date).isAfter(todayDate)),
-        previousMeetings: this.state.allMeetings.filter(meeting => moment(todayDate).isAfter(meeting.date))
-      })})
+    }
   }
 
   changeHandler = (event) => {
-    //? If event.target.value === 'Courses' => show all meetings 
-
     this.setState({
       selectedCourseTitle: event.target.dataset.title
     })
     this.setState({
       selectedCourseId: parseInt(event.target.dataset.id)
     })
-
     fetch("http://localhost:3000/courses/" + parseInt(event.target.dataset.id))
     .then(res => res.json())
     .then(data => {
@@ -130,6 +148,30 @@ class UsersCoursesContainer extends React.Component {
     })
   }
 
+  addCourse = (courseObj) => {
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify(courseObj)
+    }
+    fetch("http://localhost:3000/user_courses", options)
+    .then(resp => resp.json())
+    .then(window.location.reload(false))
+  }
+
+  dropCourse = (courseObj) => {
+    let newArray = [...this.state.myCourses]
+    newArray.splice(newArray.indexOf(courseObj), 1)
+    this.setState({myCourses: newArray})
+    const options = {
+      method: 'DELETE'}
+    fetch("http://localhost:3000/user_courses/" + courseObj.id, options)
+    .then(resp => resp.json())
+    }
+
   render(){
       return (
         <React.Fragment>
@@ -144,17 +186,21 @@ class UsersCoursesContainer extends React.Component {
           </FormControl>
           <br />
           <br />
-          {/* TEACHERS */}
-          <h5>TEACHERS</h5>
-          <CreateCourse courseHandler={this.props.courseHandler} />
-          <CreateMeeting meetingHandler={this.createMeetingHandler} courses={this.props.courses}/>
-          <h5>STUDENTS</h5>
-          {/* STUDENTS
-            ENROLL IN COURSE
-          */}
+          {this.props.user.is_teacher ?
+          <React.Fragment>
+            <CreateCourse user={this.props.user} courseHandler={this.props.courseHandler} />
+            <CreateMeeting meetingHandler={this.createMeetingHandler} courses={this.props.courses}/>
+          </React.Fragment>
+          :
+          <React.Fragment>
+            <h5>STUDENTS</h5>
+              <Enroll addCourse={this.addCourse} user={this.props.user} courses={this.state.allCourses} />
+              <DropCourse dropCourse={this.dropCourse} courses={this.state.myCourses} user={this.props.user} />
+          </React.Fragment>
+          }
           <br />
           <br />
-          <StudentListContainer students={this.state.selectedCourseStudents}/>
+          {this.props.user.is_teacher ? <StudentListContainer students={this.state.selectedCourseStudents}/> : null }
           <br />
           <br />
           <MeetingsContainer meetings={this.state.currentMeetings} courseTitle={this.state.selectedCourseTitle} courseID={this.state.selectedCourseId} />
