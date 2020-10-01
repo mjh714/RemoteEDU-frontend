@@ -20,9 +20,6 @@ class CreateMeeting extends React.Component {
         this.setState({ open: !this.state.open });
     };
 
-    //* make fetch to user_courses to match courses that have this logged in user's id (teacher)
-    //* post to /meetings 
-
 changer = (e) => {
     console.dir(e.target)
     this.setState({
@@ -40,13 +37,13 @@ submitMeeting = (e) => {
     })
 }
 
-  render() {  
-      console.log(this.state.course_id)   
-      return (
+    render() {  
+        console.log(this.state.course_id)   
+        return (
         <div>
-          <Button variant="contained" color="secondary" style={{"margin": "20px"}} onClick={this.handleClick}>
-            Create A Meeting
-          </Button>
+            <Button variant="contained" color="secondary" style={{"margin": "20px"}} onClick={this.handleClick}>
+                Create A Meeting
+            </Button>
             {this.state.open ? 
             <form style={{"margin": "20px"}} onSubmit={this.submitMeeting}>
                 <label>Date</label><br /><br />
@@ -62,8 +59,8 @@ submitMeeting = (e) => {
             </form>
             : console.log("false")}
         </div>
-      );
+        );
     }
-  }
+}
 
 export default CreateMeeting;

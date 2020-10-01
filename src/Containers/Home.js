@@ -19,7 +19,7 @@ class Home extends React.Component {
     render(){
         return(
             <div>
-                {this.props.user ? <h1>Welcome, {this.props.user.full_name}</h1> : <h1>Welcome</h1>}
+                {this.props.loggedUser ? <h1>Welcome, {this.props.loggedUser.full_name}</h1> : <h1>Welcome</h1>}
             <div className="quote-block" style={{"textAlign": "center"}}  >
                     <blockquote>"{this.state.quote["text"]}"</blockquote>
                 <p>

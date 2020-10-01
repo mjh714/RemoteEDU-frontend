@@ -2,7 +2,6 @@ import React from 'react'
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-
 class CreateCourse extends React.Component {
 
     state = {
@@ -12,28 +11,28 @@ class CreateCourse extends React.Component {
         student_cap: 30
     }
 
-   handleClick = () => {
+    handleClick = () => {
     this.setState({ open: !this.state.open });
-  };
+    };
 
-changer = (e) => {
-    this.setState({
-        [e.target.name] : e.target.value
-    })
-}
+    changer = (e) => {
+        this.setState({
+            [e.target.name] : e.target.value
+        })
+    }
+    
+    submitCourse = (e) => {
+        e.preventDefault()
+        this.props.courseHandler(this.state, this.props.user)
+        this.setState({
+            title: "",
+            length: "",
+            student_cap: 30
+        })
+    }
 
-submitCourse = (e) => {
-    e.preventDefault()
-    this.props.courseHandler(this.state)
-    this.setState({
-        title: "",
-        length: "",
-        student_cap: 30
-    })
-}
-
-  render() {     
-      return (
+    render() {     
+        return (
         <div>
         <Button variant="contained" color="primary" style={{"margin": "20px"}} onClick={this.handleClick}>
             Create A Course
@@ -50,9 +49,9 @@ submitCourse = (e) => {
             </form>
             : console.log("false")}
         </div>
-      );
+        );
     }
-  }
+}
 
 export default CreateCourse;
 

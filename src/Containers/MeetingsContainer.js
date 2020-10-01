@@ -9,10 +9,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Meeting from '../Components/Meeting.js'
 
 class MeetingsContainer extends React.Component { //* Current Meetings Container
-
-    //! don't need to create new teacher meetings container
-        // TODO -- add conditional if logged_in user.is_teacher === true - can see list of students and admin-type of buttons
-        
         
 
     getMeetings = () => {
