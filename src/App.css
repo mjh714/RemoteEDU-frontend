@@ -8,6 +8,11 @@
   pointer-events: none;
 }
 
+.page-body {
+  font-family: 'Sansita Swashed', cursive;
+  font-size: 25px;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

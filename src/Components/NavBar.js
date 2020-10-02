@@ -42,7 +42,7 @@ export default function NavBar(props) {
                     RemoteEDU
                     </h3>
                   </Button>
-              {props.user ? <NavLink to="/users/courses" style={{"color": "white"}} >Dashboard</NavLink> : null}
+              {props.user ? <NavLink to="/users/courses" style={{"color": "white", "textDecoration": "none"}} >Dashboard</NavLink> : null}
               </Typography>
               {props.user ? <Button onClick={logout} color="inherit">Logout</Button> : <Button href="/login" color="inherit">Login</Button>}
               {props.user ? null : <Button href="/signup" color="inherit">Signup</Button>}

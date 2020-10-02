@@ -29,15 +29,15 @@ class StudentListContainer extends React.Component {
         <React.Fragment>
             <h4>Students</h4>
             <TableContainer style={{"maxWidth": "15%"}} component={Paper}>
-            <TableHead style={{"backgroundColor": "white"}}>
-                <TableRow>
-                <TableCell align="left">Name</TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-            {this.getStudents()}
-            </TableBody>
-        </TableContainer>
+                <TableHead style={{"backgroundColor": "white"}}>
+                    <TableRow>
+                        <TableCell align="left">Name</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {this.getStudents()}
+                </TableBody>
+            </TableContainer>
         </React.Fragment>
         )
     }

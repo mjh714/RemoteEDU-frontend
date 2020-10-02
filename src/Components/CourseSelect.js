@@ -5,6 +5,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 class CourseSelect extends React.Component {
 
     optionsCourses = () => {
+        // debugger
         return this.props.courses.map(course => {
             return (
             <MenuItem value={course.id}>{course.title}</MenuItem>

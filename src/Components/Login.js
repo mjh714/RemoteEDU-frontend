@@ -24,8 +24,7 @@ class Login extends React.Component {
 
     render() {
         return(
-            
-            <form onSubmit={this.submitHandler}>
+            <form style={{"textAlign":"center"}} onSubmit={this.submitHandler}>
                 <div>
                 <TextField
                     type="email"

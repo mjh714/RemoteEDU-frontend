@@ -12,6 +12,7 @@ import CreateCourse from '../Components/CreateCourse'
 import CreateMeeting from '../Components/CreateMeeting'
 import Enroll from "../Components/Enroll"
 import DropCourse from '../Components/DropCourse'
+import { withRouter } from 'react-router-dom';
 
 class UsersCoursesContainer extends React.Component {
 
@@ -20,13 +21,12 @@ class UsersCoursesContainer extends React.Component {
     selectedCourseTitle: "",
     currentMeetings: [],
     previousMeetings: [],
-    allMeetings: [],
+    // allMeetings: [],
     teachers: [],
     students: [],
     selectedCourseStudents: [],
     selectedCourseTeachers: [],
-    allCourses: [],
-    myCourses: []
+    allCourses: [] 
   }
 
     useStyles = () => {
@@ -44,23 +44,20 @@ class UsersCoursesContainer extends React.Component {
   classes = () => this.useStyles();
   
   getCourses = () => {
-      return this.props.user.courses.map(course => <Course changeHandler={this.changeHandler} key={course.id} course={course} />)
+    const key = 'id'
+      let newArr = [...new Map(this.props.courses.map(item => [item[key], item])).values()]
+    //   console.log(newArr)
+      return newArr.map(course => <Course changeHandler={this.changeHandler} key={course.id} course={course} />)
+      // return this.props.courses.map(course => <Course changeHandler={this.changeHandler} key={course.id} course={course} />)
   }
 
   componentDidMount() {
     fetch("http://localhost:3000/courses")
     .then(res => res.json())
     .then(data => {
-      let newArr = [...this.props.user.courses]
-      const key = 'id'
-      let filteredArr = [...new Map(newArr.map(item =>
-        [item[key], item])).values()];
-      
-      console.log(filteredArr)
+    
       this.setState({
-        allCourses: data,
-        myCourses: [...new Map(this.props.user.courses.map(item =>
-          [item[key], item])).values()]
+        allCourses: data //,
       })
     })
     fetch("http://localhost:3000/users")
@@ -82,15 +79,16 @@ class UsersCoursesContainer extends React.Component {
     })
     let todayDate = moment().format('YYYY-MM-DD')
     
-    let courses = this.props.user.courses
+    let courses = this.props.courses
     for (const course of courses) {
       fetch("http://localhost:3000/courses/" + course.id)
       .then(resp => resp.json())
       .then(course => {
-        this.setState({ allMeetings: course.meetings})
+        this.props.meetingHandler(course.meetings)
+        // this.setState({ allMeetings: course.meetings})
         this.setState({
-          currentMeetings: this.state.allMeetings.filter(meeting => moment(meeting.date).isAfter(todayDate)),
-          previousMeetings: this.state.allMeetings.filter(meeting => moment(todayDate).isAfter(meeting.date))
+          currentMeetings: this.props.allMeetings.filter(meeting => moment(meeting.date).isAfter(todayDate)),
+          previousMeetings: this.props.allMeetings.filter(meeting => moment(todayDate).isAfter(meeting.date))
         })
       })
     }
@@ -129,9 +127,6 @@ class UsersCoursesContainer extends React.Component {
   
   
   createMeetingHandler = (meetingObj) => {
-    let newArr = [...this.state.allMeetings, meetingObj]
-    this.setState({ allMeetings: newArr})
-    
     const options = {
       method: 'POST',
       headers: {
@@ -143,8 +138,9 @@ class UsersCoursesContainer extends React.Component {
     fetch("http://localhost:3000/meetings", options)
     .then(res => res.json())
     .then(data => {
-      console.log(data)
-      window.location.reload(false);
+      let newArr = [...this.props.allMeetings, data]
+      this.props.meetingHandler(newArr)
+      this.props.history.push("/users/courses")
     })
   }
 
@@ -159,13 +155,16 @@ class UsersCoursesContainer extends React.Component {
     }
     fetch("http://localhost:3000/user_courses", options)
     .then(resp => resp.json())
-    .then(window.location.reload(false))
+    .then(data =>{
+      let newArray = [...this.props.courses, data.course]
+      this.props.addCourseHandler(newArray)
+    })
   }
 
   dropCourse = (courseObj) => {
-    let newArray = [...this.state.myCourses]
+    let newArray = [...this.props.courses]
     newArray.splice(newArray.indexOf(courseObj), 1)
-    this.setState({myCourses: newArray})
+    this.props.dropCourseHandler(newArray)
     const options = {
       method: 'DELETE'}
     fetch("http://localhost:3000/user_courses/" + courseObj.id, options)
@@ -213,4 +212,4 @@ class UsersCoursesContainer extends React.Component {
 
 }
 
-export default UsersCoursesContainer
+export default withRouter(UsersCoursesContainer)

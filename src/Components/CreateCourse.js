@@ -47,7 +47,7 @@ class CreateCourse extends React.Component {
                 <TextField type="number" value={this.state.student_cap} name="student_cap" onChange={this.changer}/><br /><br />
                 <Button type="submit" variant="contained" color="primary">Create</Button>
             </form>
-            : console.log("false")}
+            : null}
         </div>
         );
     }

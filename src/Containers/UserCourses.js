@@ -6,9 +6,11 @@ import Container from '@material-ui/core/Container';
 import UsersCoursesContainer from './UsersCoursesContainer'
 
 class UserCourses extends React.Component {
-    
+
     state = {
-        courses: []
+        courses: [],
+        courseTitle: "",
+        allMeetings: []
     }
 
     createCourseHandler = (courseObj) => {
@@ -44,11 +46,14 @@ class UserCourses extends React.Component {
         })
         .then(resp => resp.json())
         .then(data => {
-            let newCourses = [...this.state.courses, data]
+            let newCourses = [...this.state.courses, data.course]
+            // debugger
+            // console.log(data)
+            // debugger
             this.setState({
                 courses: newCourses
+                // courseTitle: data.course.title
             })
-            window.location.reload(false);
         })
     }
 
@@ -57,9 +62,29 @@ class UserCourses extends React.Component {
             this.setState({
                 courses: this.props.user.courses
             })
-        } else {
+        }  else {
             this.props.history.push("/login")
         }
+    }
+
+    dropCourseHandler = (newArr) => {
+        this.props.user.courses = newArr
+        this.setState({
+            courses: this.props.user.courses
+        })
+    }
+
+    addCourseHandler = (newArr) => {
+        this.props.user.courses = newArr
+        this.setState({
+            courses: this.props.user.courses
+        })
+    }
+
+    meetingHandler = (newArray) => {
+        this.setState({
+            allMeetings: newArray
+        })
     }
 
     render() {
@@ -68,7 +93,7 @@ class UserCourses extends React.Component {
                 <CssBaseline />
                 <Container maxWidth="lg">
                     <Typography component="div" style={{ backgroundColor: '#cfe8fc', height: 'auto'}}>
-                    {this.props.user ? <UsersCoursesContainer user={this.props.user} courses={this.state.courses} courseHandler={this.createCourseHandler} /> : <h1>Loading</h1>}
+                    {this.props.user ? <UsersCoursesContainer meetingHandler={this.meetingHandler} allMeetings={this.state.allMeetings} addCourseHandler={this.addCourseHandler} dropCourseHandler={this.dropCourseHandler} user={this.props.user} courses={this.props.user.courses} courseTitle={this.state.courseTitle} courseHandler={this.createCourseHandler} /> : <h1>Loading</h1>}
                     </Typography>
                 </Container>
             </React.Fragment>
