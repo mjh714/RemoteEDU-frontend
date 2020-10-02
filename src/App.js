@@ -10,7 +10,8 @@ import SignupContainer from './Containers/SignupContainer'
 class App extends React.Component {
 
   state = {
-    user: null
+    user: null,
+    userCourses: []
   }
 
   componentDidMount = () => {
@@ -23,9 +24,7 @@ class App extends React.Component {
         })
       .then(resp => resp.json())
       .then(data => this.setState({ user: data.user }))
-    } else {
-      this.props.history.push('/users/courses')
-    }
+    } 
   };
   
 
@@ -40,7 +39,11 @@ class App extends React.Component {
     }
     fetch("http://localhost:3000/users", options)
     .then(res => res.json())
-    .then(console.log)
+    .then(data => {
+      this.setState({
+        user: data.user
+      },() => this.props.history.push("/users/courses"))
+    })
   }
 
   loginHandler = (user) => {
@@ -57,23 +60,23 @@ class App extends React.Component {
     .then(data => {
       localStorage.setItem("token", data.jwt)
       this.setState({
-        user: data.user
-      }, () => this.props.history.push("/"))
+        user: data.user,
+        userCourses: data.user.courses
+      }, () => this.props.history.push("/users/courses"))
     })
   }
 
   render(){
-    console.log(this.state.user)
     return (
-      <div className="App">
+      <React.Fragment>
         <NavBar user={this.state.user} />
         <Switch>
-          <Route path="/users/courses" component={() => <UserCourses user={this.state.user} />}/>
-          <Route path="/login" component={()=> <LoginContainer user={this.state.user} loginHandler={this.loginHandler} />}/> 
-          <Route path="/signup" component={()=> <SignupContainer signupHandler={this.signupHandler} />}/>
-          <Route path="/" component={()=> <Home loggedUser={this.state.user}/> }/>
+          <Route exact path="/users/courses" component={() => <UserCourses user={this.state.user} courses={this.state.userCourses} />}/>
+          <Route exact path="/login" component={()=> <LoginContainer loginHandler={this.loginHandler} />}/> 
+          <Route exact path="/signup" component={()=> <SignupContainer signupHandler={this.signupHandler} />}/>
+          <Route exact path="/" component={()=> <Home loggedUser={this.state.user}/> }/>
         </Switch>
-      </div>
+      </React.Fragment>
     ); 
   }
 }

@@ -41,7 +41,7 @@ submitCourse = (e) => {
             Enroll In A Course
         </Button>
         {this.state.open ? 
-        <form onSubmit={this.submitCourse}>
+        <form style={{"margin": "20px"}} onSubmit={this.submitCourse}>
         <CourseSelect courses={this.props.courses} clickHandler={this.changer}/>
         <br />
         <br />

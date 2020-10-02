@@ -39,14 +39,15 @@ class DropCourse extends React.Component {
     }
 
     render() {
+        // debugger
         return(
             <React.Fragment>
                 <Button variant="contained" color="primary" style={{"margin": "20px"}} onClick={this.handleClick}>
                     Drop A Course
                 </Button>
                 {this.state.open ? 
-                    <form onSubmit={this.submitDrop}>
-                    <CourseSelect courses={this.props.courses} clickHandler={this.changer}/>
+                    <form style={{"margin": "20px"}} onSubmit={this.submitDrop}>
+                    <CourseSelect courses={this.props.user.courses} clickHandler={this.changer}/>
                     <br />
                     <br />
                     <Button type="submit" variant="contained" color="primary">Drop Course</Button>

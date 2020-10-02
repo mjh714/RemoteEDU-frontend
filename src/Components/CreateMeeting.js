@@ -38,7 +38,6 @@ submitMeeting = (e) => {
 }
 
     render() {  
-        console.log(this.state.course_id)   
         return (
         <div>
             <Button variant="contained" color="secondary" style={{"margin": "20px"}} onClick={this.handleClick}>
@@ -47,9 +46,9 @@ submitMeeting = (e) => {
             {this.state.open ? 
             <form style={{"margin": "20px"}} onSubmit={this.submitMeeting}>
                 <label>Date</label><br /><br />
-                <TextField type="date" value={this.state.title} name="date" placeholder="2020-09-24" onChange={this.changer} /><br />
+                <TextField type="date" value={this.state.title} name="date" onChange={this.changer} /><br />
                 <label>Time</label><br /><br />
-                <TextField type="time" value={this.state.length} name="time" placeholder="4:20 PM" onChange={this.changer}/><br />
+                <TextField type="time" value={this.state.length} name="time" onChange={this.changer}/><br />
                 <label>Link</label><br /><br />
                 <TextField type="text" value={this.state.student_cap} name="link" onChange={this.changer}/><br /><br />
                 <label>Course</label><br /><br />
@@ -57,7 +56,7 @@ submitMeeting = (e) => {
                 <br /><br />
                 <Button type="submit" variant="contained" color="primary">Create</Button>
             </form>
-            : console.log("false")}
+            : null}
         </div>
         );
     }
